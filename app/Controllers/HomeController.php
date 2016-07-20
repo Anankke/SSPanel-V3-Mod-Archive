@@ -6,6 +6,7 @@ use App\Models\InviteCode;
 use App\Models\User;
 use App\Models\Code;
 use App\Models\Payback;
+use App\Models\Paylist;
 use App\Services\Auth;
 use App\Services\Config;
 use App\Utils\Tools;
@@ -162,6 +163,89 @@ class HomeController extends BaseController
 		}
     }
 	
+	
+	public function alipay_callback($request, $response, $args)
+    {
+		
+		//您在www.zfbjk.com的商户ID
+		$alidirect_pid = Config::get("zfbjk_pid");
+		//您在www.zfbjk.com的商户密钥
+		$alidirect_key = Config::get("zfbjk_key");
+		
+		
+        $tradeNo = $request->getParam('tradeNo');
+		$Money = $request->getParam('Money');
+		$title = $request->getParam('title');
+		$memo = $request->getParam('memo');
+		$alipay_account = $request->getParam('alipay_account');
+		$Gateway = $request->getParam('Gateway');
+		$Sign = $request->getParam('Sign');
+		if(!is_numeric($title)){exit("fail");}
+
+		if(strtoupper(md5($alidirect_pid . $alidirect_key . $tradeNo . $Money . $title . $memo)) == strtoupper($Sign))
+		{
+			
+			$trade = Paylist::where("tradeno",'=',$tradeNo)->first();
+			
+			if($trade != NULL)
+			{
+				exit("success");
+			}
+			else
+			{
+				$user=User::where('id','=',$title)->first();
+				if($user == NULl)
+				{
+					exit("IncorrectOrder");
+				}
+				$user->money=$user->money+$Money;
+				$user->save();
+				
+				$codeq=new Code();
+				$codeq->code="支付宝充值";
+				$codeq->isused=1;
+				$codeq->type=-1;
+				$codeq->number=$Money;
+				$codeq->usedatetime=date("Y-m-d H:i:s");
+				$codeq->userid=$user->id;
+				$codeq->save();
+			  
+			  
+				
+				
+				if($user->ref_by!=""&&$user->ref_by!=0&&$user->ref_by!=NULL)
+				{
+					$gift_user=User::where("id","=",$user->ref_by)->first();
+					$gift_user->money=($gift_user->money+($codeq->number*(Config::get('code_payback')/100)));
+					$gift_user->save();
+					
+					$Payback=new Payback();
+					$Payback->total=$Money;
+					$Payback->userid=$user->id;
+					$Payback->ref_by=$user->ref_by;
+					$Payback->ref_get=$codeq->number*(Config::get('code_payback')/100);
+					$Payback->datetime=time();
+					$Payback->save();
+					
+				}
+			  
+
+				$pl = new Paylist();
+				$pl->userid=$title;
+				$pl->tradeno=$tradeNo;
+				$pl->money=$Money;
+				$pl->paytime=date("Y-m-d H:i:s");
+				$pl->save();
+				
+				
+				exit("Success");
+			}
+		}
+		else
+		{
+			exit('Fail');
+		}
+    }
 	
 
 }

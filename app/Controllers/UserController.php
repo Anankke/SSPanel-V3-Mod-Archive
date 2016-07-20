@@ -179,7 +179,7 @@ class UserController extends BaseController
 			}
 			$codes = Code::where('userid','=',$this->user->id)->orderBy('id', 'desc')->paginate(15, ['*'], 'page', $pageNum);
 			$codes->setPath('/user/code');
-			return $this->view()->assign('codes',$codes)->assign('pmw_height',Config::get('pmw_height'))->assign('pmw',$widget->getHtmlCode(array("height"=>Config::get('pmw_height'),"width"=>"100%")))->display('user/code.tpl');
+			$pmw=$widget->getHtmlCode(array("height"=>Config::get('pmw_height'),"width"=>"100%"));
 		
 		}
 		else
@@ -191,9 +191,20 @@ class UserController extends BaseController
 			}
 			$codes = Code::where('userid','=',$this->user->id)->orderBy('id', 'desc')->paginate(15, ['*'], 'page', $pageNum);
 			$codes->setPath('/user/code');
-			return $this->view()->assign('codes',$codes)->assign('pmw_height',Config::get('pmw_height'))->assign('pmw','0')->display('user/code.tpl');
-		
+			
+			$pmw='0';
 		}
+		
+		if(Config::get('enable_alipay') == 'true')
+		{
+			$alipay=Config::get("zfbjk_qrcode");
+		}
+		else
+		{
+			$alipay='0';
+		}
+		
+		return $this->view()->assign('codes',$codes)->assign('pmw_height',Config::get('pmw_height'))->assign('alipay',$alipay)->assign('user',$this->user)->assign('pmw',$pmw)->display('user/code.tpl');
 		
 
 		

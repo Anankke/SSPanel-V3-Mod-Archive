@@ -64,6 +64,20 @@
 					</div>
 					{/if}
 					
+					
+					{if $alipay!='0'}
+					<div class="col-lg-12 col-md-12">
+						<div class="card margin-bottom-no">
+							<div class="card-main">
+								<div class="card-inner">
+									请扫码，给我转账来充值，记得备注上 <code>{$user->id}</code>。<br>
+									<img src="{$alipay}"/>
+								</div>
+							</div>
+						</div>
+					</div>
+					{/if}
+					
 					<div class="col-lg-12 col-md-12">
 						<div class="card margin-bottom-no">
 							<div class="card-main">
