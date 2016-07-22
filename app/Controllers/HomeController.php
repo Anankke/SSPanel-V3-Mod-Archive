@@ -198,6 +198,12 @@ class HomeController extends BaseController
 				{
 					exit("IncorrectOrder");
 				}
+				$pl = new Paylist();
+				$pl->userid=$title;
+				$pl->tradeno=$tradeNo;
+				$pl->money=$Money;
+				$pl->paytime=date("Y-m-d H:i:s");
+				$pl->save();
 				$user->money=$user->money+$Money;
 				$user->save();
 				
@@ -230,12 +236,6 @@ class HomeController extends BaseController
 				}
 			  
 
-				$pl = new Paylist();
-				$pl->userid=$title;
-				$pl->tradeno=$tradeNo;
-				$pl->money=$Money;
-				$pl->paytime=date("Y-m-d H:i:s");
-				$pl->save();
 				
 				
 				exit("Success");
