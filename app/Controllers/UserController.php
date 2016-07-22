@@ -195,7 +195,7 @@ class UserController extends BaseController
 			$pmw='0';
 		}
 		
-		if(Config::get('enable_alipay') == 'true')
+		if(Config::get('enable_zfbjk') == 'true')
 		{
 			$alipay=Config::get("zfbjk_qrcode");
 		}
