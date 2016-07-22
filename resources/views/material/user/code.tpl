@@ -181,7 +181,7 @@
         })
     })
 	
-	timestamp = Date.parse(new Date())/1000; 
+	timestamp = {time()}; 
 		
 		
 	function f(){
