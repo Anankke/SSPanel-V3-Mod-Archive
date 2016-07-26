@@ -187,6 +187,7 @@ $System_Config['jump_delay']='1800';
 
 
 
+
 #是否启用邀请码注册
 $System_Config['enable_invite_code']='true';
 
@@ -217,6 +218,7 @@ $System_Config['reg_obfs_param']='';
 
 #是否将登陆线程和IP绑定
 $System_Config['enable_login_bind_ip']='true';
+
 
 
 
@@ -255,14 +257,15 @@ $System_Config['enable_geetest_login']='false';
 $System_Config['enable_geetest_checkin']='false';
 
 #自动清理多少天没签到的0级用户
-$Systrm_Config['enable_auto_clean_uncheck']='false';
-$Systrm_Config['enable_auto_clean_uncheck_days']='7';
+$System_Config['enable_auto_clean_uncheck']='false';
+$System_Config['enable_auto_clean_uncheck_days']='7';
 
 
 #自动清理多少天没使用的0级用户
-$Systrm_Config['enable_auto_clean_unused']='false';
-$Systrm_Config['enable_auto_clean_unused_days']='30';
+$System_Config['enable_auto_clean_unused']='false';
+$System_Config['enable_auto_clean_unused_days']='30';
 
 
 #是否夹带统计代码，自己在 resources/views/{主题名} 下创建一个 analytics.tpl ，如果有必要就用 literal 界定符
-$Systrm_Config['enable_analytics_code']='false';
+$System_Config['enable_analytics_code']='false';
+
