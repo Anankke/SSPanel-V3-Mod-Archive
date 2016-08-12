@@ -131,6 +131,10 @@
 										Google+
 										{/if}
 										
+										{if $user->im_type==4}
+										Telegram
+										{/if}
+										
 										{$user->im_value}</p>
 										<div class="form-group form-group-label">
 											<label class="floating-label" for="imtype">选择您的联络方式</label>
@@ -139,6 +143,7 @@
 												<option value="1">微信</option>
 												<option value="2">QQ</option>
 												<option value="3">Google+</option>
+												<option value="4">Telegram</option>
 											</select>
 										</div>
 											
@@ -166,7 +171,7 @@
 									<div class="card-inner">
 										<p class="card-heading">SSR 协议&混淆设置</p>
 										<p>当前协议：{$user->protocol}</p>
-										<p>注意：如果需要在手机使用SS请选择带_compatible的兼容选项！</p>
+										<p>注意：如果需要兼容原版SS请选择带_compatible的兼容选项！</p>
 										<p>当前协议参数：{$user->protocol_param}</p>
 										<p>注意：参数请放空，除非你看得懂<a href="https://github.com/breakwa11/shadowsocks-rss/blob/master/ssr.md">这里</a>！</p>
 										<div class="form-group form-group-label">
@@ -185,15 +190,11 @@
 											</select>
 										</div>
 										
-										<div class="form-group form-group-label">
-											<label class="floating-label" for="protocol_param">协议参数</label>
-											<input class="form-control" id="protocol_param" type="text">
-										</div>
 									</div>
 									
 									<div class="card-inner">
 										<p>当前混淆方式：{$user->obfs}</p>
-										<p>注意：如果需要在手机使用SS请选择带_compatible的兼容选项！</p>
+										<p>注意：如果需要兼容原版SS请选择带_compatible的兼容选项！</p>
 										<p>当前混淆参数：{$user->obfs_param}</p>
 										<p>注意：参数请放空，除非你看得懂<a href="https://github.com/breakwa11/shadowsocks-rss/blob/master/ssr.md">这里</a>！</p>
 										<div class="form-group form-group-label">
@@ -211,11 +212,6 @@
 												<option value="tls1.2_ticket_auth">tls1.2_ticket_auth</option>
 												<option value="tls1.2_ticket_auth_compatible">tls1.2_ticket_auth_compatible</option>
 											</select>
-										</div>
-										
-										<div class="form-group form-group-label">
-											<label class="floating-label" for="obfs_param">混淆参数</label>
-											<input class="form-control" id="obfs_param" type="text">
 										</div>
 									</div>
 									
@@ -547,9 +543,7 @@
                 dataType: "json",
                 data: {
                     protocol: $("#protocol").val(),
-					protocol_param: $("#protocol_param").val(),
-					obfs: $("#obfs").val(),
-					obfs_param: $("#obfs_param").val()
+					obfs: $("#obfs").val()
                 },
                 success: function (data) {
                     if (data.ret) {
