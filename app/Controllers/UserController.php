@@ -59,6 +59,9 @@ class UserController extends BaseController
 		
 		$user = $this->user;
 		
+		
+		$mu_nodes = Node::where('sort',9)->get();
+		
 		foreach($nodes as $node)
 		{
 			$ary['server'] = $node->server;
@@ -80,6 +83,27 @@ class UserController extends BaseController
 				$ssurl = $ary['method'] . ":" . $ary['password'] . "@" . $ary['server'] . ":" . $ary['server_port'];
 				$ssqr = "ss://" . base64_encode($ssurl);
 				$android_add .= $ssqr."|";
+			}
+			
+			
+			if($node->custom_rss == 1)
+			{
+				foreach($mu_nodes as $mu_node)
+				{
+					$mu_user = User::where('port','=',$mu_node->server)->first();
+					$mu_user->obfs_param = $user->getMuMd5().".".$user->id.".".Config::get("mu_suffix");
+					
+					$ary['server_port'] = $mu_user->port;
+					$ary['password'] = $mu_user->passwd;
+					$ary['method'] = $node->method;
+					if ($node->custom_method) {
+						$ary['method'] = $mu_user->method;
+					}
+					
+					$ssurl = $ary['server']. ":" . $ary['server_port'].":".str_replace("_compatible","",$mu_user->protocol).":".$ary['method'].":".str_replace("_compatible","",$mu_user->obfs).":".Tools::base64_url_encode($ary['password'])."/?obfsparam=".Tools::base64_url_encode($mu_user->obfs_param)."&remarks=".Tools::base64_url_encode($node->name." - ".$mu_node->server." 端口单端口多用户");
+					$ssqr_s_new = "ssr://" . Tools::base64_url_encode($ssurl);
+					$android_add .= $ssqr_s_new."|";
+				}
 			}
 		}
 		
@@ -553,7 +577,7 @@ class UserController extends BaseController
 				{
 					$ary['server'] = $node->server;
 					
-					$mu = 0;
+					$is_mu = 0;
 					
 					if($mu == 0)
 					{
@@ -563,19 +587,20 @@ class UserController extends BaseController
 						if ($node->custom_method) {
 							$ary['method'] = $this->user->method;
 						}
-						$mu = 1;
 					}
 					else
 					{
 						$mu_user = User::where('port','=',$mu)->first();
 						$mu_user->obfs_param = $this->user->getMuMd5().".".$this->user->id.".".Config::get("mu_suffix");
 						$user = $mu_user;
+						$node->name .= " - ".$mu." 端口单端口多用户";
 						$ary['server_port'] = $mu_user->port;
 						$ary['password'] = $mu_user->passwd;
 						$ary['method'] = $node->method;
 						if ($node->custom_method) {
 							$ary['method'] = $mu_user->method;
 						}
+						$is_mu = 1;
 					}
 					
 					$json = json_encode($ary);
@@ -606,7 +631,7 @@ class UserController extends BaseController
 					$surge_proxy = "#!PROXY-OVERRIDE:ProxyBase.conf\n";
 					$surge_proxy .= "[Proxy]\n";
 					$surge_proxy .= "Proxy = custom," . $ary['server'] . "," . $ary['server_port'] . "," . $ary['method'] . "," . $ary['password'] . "," . Config::get('baseUrl') . "/downloads/SSEncrypt.module";
-					return $this->view()->assign('ary', $ary)->assign('mu',$mu)->assign('node',$node)->assign('user',$user)->assign('json', $json)->assign('link1',Config::get('baseUrl')."/link/".$token_1)->assign('link2',Config::get('baseUrl')."/link/".$token_2)->assign('json_show', $json_show)->assign('ssqr', $ssqr)->assign('ssqr_s_new',$ssqr_s_new)->assign('ssqr_s', $ssqr_s)->assign('surge_base', $surge_base)->assign('surge_proxy', $surge_proxy)->assign('info_server', $ary['server'])->assign('info_port', $this->user->port)->assign('info_method', $ary['method'])->assign('info_pass', $this->user->passwd)->display('user/nodeinfo.tpl');
+					return $this->view()->assign('ary', $ary)->assign('mu',$is_mu)->assign('node',$node)->assign('user',$user)->assign('json', $json)->assign('link1',Config::get('baseUrl')."/link/".$token_1)->assign('link2',Config::get('baseUrl')."/link/".$token_2)->assign('json_show', $json_show)->assign('ssqr', $ssqr)->assign('ssqr_s_new',$ssqr_s_new)->assign('ssqr_s', $ssqr_s)->assign('surge_base', $surge_base)->assign('surge_proxy', $surge_proxy)->assign('info_server', $ary['server'])->assign('info_port', $this->user->port)->assign('info_method', $ary['method'])->assign('info_pass', $this->user->passwd)->display('user/nodeinfo.tpl');
 				}
 			break; 
 
