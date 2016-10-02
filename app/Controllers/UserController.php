@@ -1406,6 +1406,18 @@ class UserController extends BaseController
             return $response->getBody()->write(json_encode($res));
         }
 		
+		if (!Tools::is_validate($obfs)) {
+            $res['ret'] = 0;
+            $res['msg'] = "悟空别闹";
+            return $response->getBody()->write(json_encode($res));
+        }
+		
+		if (!Tools::is_validate($protocol)) {
+            $res['ret'] = 0;
+            $res['msg'] = "悟空别闹";
+            return $response->getBody()->write(json_encode($res));
+        }
+		
         $antiXss = new AntiXSS();
 		
 		$user->protocol = $antiXss->xss_clean($protocol);
@@ -1488,6 +1500,12 @@ class UserController extends BaseController
         $pwd = $request->getParam('sspwd');
         
         if ($pwd == "") {
+            $res['ret'] = 0;
+            $res['msg'] = "悟空别闹";
+            return $response->getBody()->write(json_encode($res));
+        }
+		
+		if (!Tools::is_validate($pwd)) {
             $res['ret'] = 0;
             $res['msg'] = "悟空别闹";
             return $response->getBody()->write(json_encode($res));
