@@ -2420,7 +2420,6 @@
             "url": "https://api.github.com/repos/twigphp/Twig/zipball/3566d311a92aae4deec6e48682dc5a4528c4a512",
             "reference": "3566d311a92aae4deec6e48682dc5a4528c4a512",
             "shasum": ""
-<<<<<<< HEAD
         },
         "require": {
             "php": ">=5.2.7"
@@ -2429,16 +2428,6 @@
             "symfony/debug": "~2.7",
             "symfony/phpunit-bridge": "~2.7"
         },
-=======
-        },
-        "require": {
-            "php": ">=5.2.7"
-        },
-        "require-dev": {
-            "symfony/debug": "~2.7",
-            "symfony/phpunit-bridge": "~2.7"
-        },
->>>>>>> spay-dev
         "time": "2016-05-30 09:11:59",
         "type": "library",
         "extra": {
@@ -2566,19 +2555,11 @@
             "symfony/dependency-injection": "~2.6|~3.0.0",
             "symfony/expression-language": "~2.6|~3.0.0",
             "symfony/stopwatch": "~2.3|~3.0.0"
-<<<<<<< HEAD
         },
         "suggest": {
             "symfony/dependency-injection": "",
             "symfony/http-kernel": ""
         },
-=======
-        },
-        "suggest": {
-            "symfony/dependency-injection": "",
-            "symfony/http-kernel": ""
-        },
->>>>>>> spay-dev
         "time": "2016-07-28 16:56:28",
         "type": "library",
         "extra": {
@@ -2611,8 +2592,6 @@
         ],
         "description": "Symfony EventDispatcher Component",
         "homepage": "https://symfony.com"
-<<<<<<< HEAD
-=======
     },
     {
         "name": "telegram-bot/api",
@@ -2670,6 +2649,5 @@
             "php",
             "telegram"
         ]
->>>>>>> spay-dev
     }
 ]
