@@ -654,7 +654,7 @@ class Job
 				
 			}
 			
-			if(strtotime($user->expire_in)<time() && $user->transfer_enable != Tools::toGB(Config::get('enable_account_expire_reset_traffic')))
+			if(strtotime($user->expire_in)<time() && (Config::get('enable_account_expire_reset')=='true' ? $user->transfer_enable != Tools::toGB(Config::get('enable_account_expire_reset_traffic')) : True && Config::get('enable_class_expire_reset')=='true' ? $user->transfer_enable != Tools::toGB(Config::get('enable_class_expire_reset_traffic')) : True))
 			{
 				if(Config::get('enable_account_expire_reset')=='true')
 				{
@@ -770,7 +770,7 @@ class Job
 				}
 			}
 			
-			if($user->class!=0 && $user->transfer_enable != Tools::toGB(Config::get('enable_class_expire_reset_traffic')) && strtotime($user->class_expire)<time() && strtotime($user->class_expire) > 1420041600)
+			if($user->class!=0 && (Config::get('enable_account_expire_reset')=='true' ? $user->transfer_enable != Tools::toGB(Config::get('enable_account_expire_reset_traffic')) : True && Config::get('enable_class_expire_reset')=='true' ? $user->transfer_enable != Tools::toGB(Config::get('enable_class_expire_reset_traffic')) : True) && strtotime($user->class_expire)<time() && strtotime($user->class_expire) > 1420041600)
 			{
 				if(Config::get('enable_class_expire_reset')=='true')
 				{
