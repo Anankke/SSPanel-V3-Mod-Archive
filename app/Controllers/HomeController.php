@@ -6,6 +6,7 @@ use App\Models\InviteCode;
 use App\Models\User;
 use App\Models\Code;
 use App\Models\Payback;
+use App\Models\Paylist;
 use App\Services\Auth;
 use App\Services\Config;
 use App\Utils\Tools;
@@ -195,4 +196,171 @@ class HomeController extends BaseController
 			echo 'error';
 		}
     }
+
+	public function alipay_callback($request, $response, $args)
+    {
+        require_once(BASE_PATH."/alipay/alipay.config.php");
+		require_once(BASE_PATH."/alipay/lib/alipay_notify.class.php");
+		
+		
+		if(Config::get('enable_alipay')!='false')
+		{
+			//计算得出通知验证结果
+			$alipayNotify = new \SPAYNotify($alipay_config);
+			$verify_result = $alipayNotify->verifyNotify();
+
+			if($verify_result) {//验证成功
+					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					//请在这里加上商户的业务逻辑程序代
+
+					
+					//——请根据您的业务逻辑来编写程序（以下代码仅作参考）——
+					
+					//获取支付宝的通知返回参数，可参考技术文档中服务器异步通知参数列表
+					
+					//商户订单号
+
+					$out_trade_no = $_POST['out_trade_no'];
+
+					//支付宝交易号
+
+					$trade_no = $_POST['trade_no'];
+
+					//交易状态
+					$trade_status = $_POST['trade_status'];
+					
+					$trade = Paylist::where("id",'=',$out_trade_no)->where('status',0)->where('total',$_POST['total_fee'])->first();
+			
+					if($trade == NULL)
+					{
+						exit("success");
+					}
+					
+					$trade->status = 1;
+					$trade->save();
+
+					//status
+					$trade_status = $_POST['trade_status'];
+
+
+					if($_POST['trade_status'] == 'TRADE_FINISHED') {
+						//判断该笔订单是否在商户网站中已经做过处理
+							//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
+							//请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的
+							//如果有做过处理，不执行商户的业务程序
+								
+						//注意：
+						//退款日期超过可退款期限后（如三个月可退款），支付宝系统发送该交易状态通知
+
+						//调试用，写文本函数记录程序运行情况是否正常
+						//logResult("这里写入想要调试的代码变量值，或其他运行的结果记录");
+						
+						
+						
+						$user=User::find($trade->userid);
+						$user->money=$user->money+$_POST['total_fee'];
+						$user->save();
+						
+						$codeq=new Code();
+						$codeq->code="支付宝 充值";
+						$codeq->isused=1;
+						$codeq->type=-1;
+						$codeq->number=$_POST['total_fee'];
+						$codeq->usedatetime=date("Y-m-d H:i:s");
+						$codeq->userid=$user->id;
+						$codeq->save();
+					  
+					  
+						
+						
+						if($user->ref_by!=""&&$user->ref_by!=0&&$user->ref_by!=NULL)
+						{
+							$gift_user=User::where("id","=",$user->ref_by)->first();
+							$gift_user->money=($gift_user->money+($codeq->number*(Config::get('code_payback')/100)));
+							$gift_user->save();
+							
+							$Payback=new Payback();
+							$Payback->total=$_POST['total_fee'];
+							$Payback->userid=$user->id;
+							$Payback->ref_by=$user->ref_by;
+							$Payback->ref_get=$codeq->number*(Config::get('code_payback')/100);
+							$Payback->datetime=time();
+							$Payback->save();
+							
+						}
+						
+					}
+					else if ($_POST['trade_status'] == 'TRADE_SUCCESS') {
+						//判断该笔订单是否在商户网站中已经做过处理
+							//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
+							//请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的
+							//如果有做过处理，不执行商户的业务程序
+								
+						//注意：
+						//付款完成后，支付宝系统发送该交易状态通知
+
+						//调试用，写文本函数记录程序运行情况是否正常
+						//logResult("这里写入想要调试的代码变量值，或其他运行的结果记录");
+						
+						$user=User::find($trade->userid);
+						$user->money=$user->money+$_POST['total_fee'];
+						$user->save();
+						
+						$codeq=new Code();
+						$codeq->code="支付宝 充值";
+						$codeq->isused=1;
+						$codeq->type=-1;
+						$codeq->number=$_POST['total_fee'];
+						$codeq->usedatetime=date("Y-m-d H:i:s");
+						$codeq->userid=$user->id;
+						$codeq->save();
+					  
+					  
+						
+						
+						if($user->ref_by!=""&&$user->ref_by!=0&&$user->ref_by!=NULL)
+						{
+							$gift_user=User::where("id","=",$user->ref_by)->first();
+							$gift_user->money=($gift_user->money+($codeq->number*(Config::get('code_payback')/100)));
+							$gift_user->save();
+							
+							$Payback=new Payback();
+							$Payback->total=$_POST['total_fee'];
+							$Payback->userid=$user->id;
+							$Payback->ref_by=$user->ref_by;
+							$Payback->ref_get=$codeq->number*(Config::get('code_payback')/100);
+							$Payback->datetime=time();
+							$Payback->save();
+							
+						}
+						
+					}
+
+					//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
+						
+					echo "success";		//请不要修改或删除
+					
+					if(Config::get('enable_donate') == 'true')
+					{
+						if($user->is_hide == 1)
+						{
+							Telegram::Send("姐姐姐姐，一位不愿透露姓名的大老爷给我们捐了 ".$codeq->number." 元呢~");
+						}
+						else
+						{
+							Telegram::Send("姐姐姐姐，".$user->user_name." 大老爷给我们捐了 ".$codeq->number." 元呢~");
+						}
+					}
+					
+					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			}
+			else {
+				//验证失败
+				echo "fail";
+
+				//调试用，写文本函数记录程序运行情况是否正常
+				//logResult("这里写入想要调试的代码变量值，或其他运行的结果记录");
+			}
+		}
+	}
 }

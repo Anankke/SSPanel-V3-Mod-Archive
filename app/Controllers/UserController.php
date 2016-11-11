@@ -12,6 +12,7 @@ use voku\helper\AntiXSS;
 use App\Models\User;
 use App\Models\Code;
 use App\Models\Ip;
+use App\Models\Paylist;
 use App\Models\LoginIp;
 use App\Models\BlockIp;
 use App\Models\UnblockIp;
@@ -174,7 +175,7 @@ class UserController extends BaseController
 			}
 			$codes = Code::where('userid','=',$this->user->id)->orderBy('id', 'desc')->paginate(15, ['*'], 'page', $pageNum);
 			$codes->setPath('/user/code');
-			return $this->view()->assign('codes',$codes)->assign('pmw_height',Config::get('pmw_height'))->assign('pmw',$widget->getHtmlCode(array("height"=>Config::get('pmw_height'),"width"=>"100%")))->display('user/code.tpl');
+			return $this->view()->assign('codes',$codes)->assign('enable_alipay',Config::get("enable_alipay"))->assign('pmw_height',Config::get('pmw_height'))->assign('pmw',$widget->getHtmlCode(array("height"=>Config::get('pmw_height'),"width"=>"100%")))->display('user/code.tpl');
 		
 		}
 		else
@@ -186,7 +187,7 @@ class UserController extends BaseController
 			}
 			$codes = Code::where('userid','=',$this->user->id)->orderBy('id', 'desc')->paginate(15, ['*'], 'page', $pageNum);
 			$codes->setPath('/user/code');
-			return $this->view()->assign('codes',$codes)->assign('pmw_height',Config::get('pmw_height'))->assign('pmw','0')->display('user/code.tpl');
+			return $this->view()->assign('codes',$codes)->assign('enable_alipay',Config::get("enable_alipay"))->assign('pmw_height',Config::get('pmw_height'))->assign('pmw','0')->display('user/code.tpl');
 		
 		}
 		
@@ -235,6 +236,56 @@ class UserController extends BaseController
             return $response->getBody()->write(json_encode($res));
 		}
 		
+    }
+
+
+	public function alipay($request, $response, $args)
+    {
+		$amount=$args["amount"];
+		require_once(BASE_PATH."/alipay/alipay.config.php");
+		require_once(BASE_PATH."/alipay/lib/alipay_submit.class.php");
+
+		/**************************请求参数**************************/
+		
+		
+		$pl = new Paylist();
+		$pl->userid = $this->user->id;
+		$pl->total = $amount;
+		$pl->save();
+		
+		//商户订单号，商户网站订单系统中唯一订单号，必填
+		$out_trade_no = $pl->id;
+
+		//订单名称，必填
+		$subject = $pl->id."UID".$this->user->id." 充值".$amount."元";
+
+		//付款金额，必填
+		$total_fee = (float)$amount;
+
+		//商品描述，可空
+		$body = $this->user->id;
+
+
+
+		
+
+		/************************************************************/
+
+		//构造要请求的参数数组，无需改动
+		$parameter = array(
+		"service" => "create_direct_pay_by_user",
+		"partner" => trim($alipay_config['partner']),
+		"notify_url"	=> $alipay_config['notify_url'],
+		"return_url"	=> $alipay_config['return_url'],
+		"out_trade_no"	=> $out_trade_no,
+		"total_fee"	=> $total_fee
+		);
+
+		//建立请求
+		$alipaySubmit = new \SPAYSubmit($alipay_config);
+		$html_text = $alipaySubmit->buildRequestForm($parameter,"get", "确认");
+		echo $html_text;
+		exit(0);
     }
 	
 	

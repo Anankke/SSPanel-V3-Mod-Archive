@@ -287,3 +287,10 @@ $System_Config['mu_suffix']='baidu.com';
 
 #多用户混淆参数表达式，%5m代表取用户特征 md5 的前五位，%id 代表用户id,%suffix 代表上面这个后缀。
 $System_Config['mu_regex']='%5m%id.%suffix';
+
+
+
+#alipay,spay,自己摸索怎么用，此处不提供任何技术支持。
+$System_Config['enable_alipay']='false';
+$System_Config['alipay_id']='';
+$System_Config['alipay_key']='';

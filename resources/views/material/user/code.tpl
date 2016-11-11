@@ -25,6 +25,29 @@
 			<section class="content-inner margin-top-no">
 				<div class="row">
 				
+					{if $enable_alipay != 'false'}
+					<div class="col-lg-12 col-md-12">
+						<div class="card margin-bottom-no">
+							<div class="card-main">
+								<div class="card-inner">
+									<div class="card-inner">
+										<p class="card-heading">支付宝充值</p>
+										<div class="form-group form-group-label">
+											<label class="floating-label" for="amount">充值金额</label>
+											<input class="form-control" id="amount" type="text">
+										</div>
+									</div>
+									<div class="card-action">
+										<div class="card-action-btn pull-left">
+											<button class="btn btn-flat waves-attach" id="alipay-update" ><span class="icon">check</span>&nbsp;提交</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					{/if}
+				
 					
 					
 					<div class="col-lg-12 col-md-12">
@@ -167,7 +190,24 @@
                 }
             })
         })
-
+		
+		
+		{if $enable_alipay != 'false'}
+		function alipay(){
+			window.location="/user/alipay/"+$("#amount").val();
+		}
+		
+		$("#alipay-update").click(function(){
+			if($("#amount").val()!="")
+			{
+				alipay();
+			}
+		})
+		
+		
+		
+		{/if}
+    
 	
 	timestamp = {time()}; 
 		
