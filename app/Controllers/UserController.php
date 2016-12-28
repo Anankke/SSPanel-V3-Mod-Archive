@@ -218,7 +218,7 @@ class UserController extends BaseController
 						}
 						else
 						{
-							$relay_node = $rule->Source_Node();
+							$relay_node = $relay_rule->Source_Node();
 							if($relay_node != NULL)
 							{
 								
