@@ -102,6 +102,10 @@ Class Radius
 			}
 			else
 			{
+<<<<<<< HEAD
+=======
+				$user = User::where('email', '=', $email1)->first();
+>>>>>>> spay-back-dev
 				$rb = RadiusBan::where('userid', $user->id)->first();
 				if($rb != null)
 				{
