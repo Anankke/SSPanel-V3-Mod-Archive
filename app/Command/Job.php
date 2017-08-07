@@ -17,6 +17,7 @@ use App\Models\TrafficLog;
 use App\Models\DetectLog;
 use App\Models\BlockIp;
 use App\Models\TelegramSession;
+use App\Models\EmailVerify;
 use App\Services\Config;
 use App\Utils\Radius;
 use App\Utils\Wecenter;
@@ -139,6 +140,8 @@ class Job
         NodeOnlineLog::where("log_time", "<", time()-86400*3)->delete();
         TrafficLog::where("log_time", "<", time()-86400*3)->delete();
         DetectLog::where("datetime", "<", time()-86400*3)->delete();
+        Speedtest::where("datetime", "<", time()-86400*3)->delete();
+        EmailVerify::where("expire_in", "<", time()-86400*3)->delete();
         Telegram::Send("姐姐姐姐，数据库被清理了，感觉身体被掏空了呢~");
 
         //auto reset
