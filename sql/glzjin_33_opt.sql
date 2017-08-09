@@ -5,40 +5,25 @@ ALTER TABLE `alive_ip` ADD INDEX(`userid`);
 
 ALTER TABLE `alive_ip` CHANGE `ip` `ip` CHAR(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
 
-ALTER TABLE `alive_ip` ENGINE = MEMORY;
 
 TRUNCATE `user_traffic_log`;
 
-ALTER TABLE `user_traffic_log` ENGINE = MEMORY;
-
 ALTER TABLE `telegram_session` CHANGE `session_content` `session_content` CHAR(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL; 
-
-ALTER TABLE `telegram_session` ENGINE = MEMORY;
 
 
 ALTER TABLE `speedtest` CHANGE `telecomping` `telecomping` CHAR(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, CHANGE `telecomeupload` `telecomeupload` CHAR(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, CHANGE `telecomedownload` `telecomedownload` CHAR(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, CHANGE `unicomping` `unicomping` CHAR(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, CHANGE `unicomupload` `unicomupload` CHAR(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, CHANGE `unicomdownload` `unicomdownload` CHAR(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, CHANGE `cmccping` `cmccping` CHAR(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, CHANGE `cmccupload` `cmccupload` CHAR(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, CHANGE `cmccdownload` `cmccdownload` CHAR(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
-
-TRUNCATE `speedtest`;
-
-ALTER TABLE `speedtest` ENGINE = MEMORY;
 
 TRUNCATE `email_verify`;
 
 ALTER TABLE `email_verify` CHANGE `email` `email` CHAR(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, CHANGE `ip` `ip` CHAR(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, CHANGE `code` `code` CHAR(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
 
-ALTER TABLE `email_verify` ENGINE = MEMORY;
-
 TRUNCATE `disconnect_ip`;
 
 ALTER TABLE `disconnect_ip` CHANGE `ip` `ip` CHAR(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL; 
 
-ALTER TABLE `disconnect_ip` ENGINE = MEMORY;
-
 TRUNCATE `blockip`;
 
 ALTER TABLE `blockip` CHANGE `ip` `ip` CHAR(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
-
-ALTER TABLE `blockip` ENGINE = MEMORY;
 
 ALTER TABLE `blockip` ADD INDEX(`ip`);
 
@@ -73,13 +58,9 @@ ALTER TABLE `ss_node` ADD INDEX( `type`, `sort`, `node_class`, `node_group`);
 
 TRUNCATE `ss_node_info`;
 
-ALTER TABLE `ss_node_info` ENGINE = MEMORY;
-
 ALTER TABLE `ss_node_info` ADD INDEX(`node_id`);
 
 TRUNCATE `ss_node_online_log`;
-
-ALTER TABLE `ss_node_online_log` ENGINE = MEMORY;
 
 ALTER TABLE `ss_node_online_log` ADD INDEX(`node_id`);
 
