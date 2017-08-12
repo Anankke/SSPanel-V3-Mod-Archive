@@ -114,7 +114,7 @@ class IpController extends AdminController
 
     public function ajax_unblock($request, $response, $args)
     {
-        $datatables = new Datatables(new DatatablesHelper($single->ip()));
+        $datatables = new Datatables(new DatatablesHelper());
         $datatables->query('Select unblockip.id,userid,user.user_name,unblockip.ip,unblockip.ip as location,datetime from unblockip,user WHERE unblockip.userid = user.id');
 
         $datatables->edit('datetime', function ($data) {
