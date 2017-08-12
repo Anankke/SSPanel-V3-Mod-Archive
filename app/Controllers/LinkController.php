@@ -1740,6 +1740,7 @@ FINAL,Proxy';
                 $bash .= 'nvram set rt_ss_port_x'.$count.'='.$item['port']."\n";
                 $bash .= 'nvram set rt_ss_password_x'.$count.'="'.$item['passwd']."\"\n";
                 $bash .= 'nvram set rt_ss_server_x'.$count.'='.$item['address']."\n";
+                $bash .= 'nvram set rt_ss_usage_x'.$count.'=""'."\n";
                 $bash .= 'nvram set rt_ss_method_x'.$count.'='.$item['method']."\n";
                 $count += 1;
             }
