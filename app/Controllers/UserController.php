@@ -923,9 +923,10 @@ class UserController extends BaseController
 
         $price=$shop->price*((100-$credit)/100);
         $user=$this->user;
-        if ($user->money<$price) {
+
+        if ((float)$user->money<(float)$price) {
             $res['ret'] = 0;
-            $res['msg'] = "余额不足";
+            $res['msg'] = "余额不足，总价为".$price."元。";
             return $response->getBody()->write(json_encode($res));
         }
 
